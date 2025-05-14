@@ -1,0 +1,7 @@
+import express, { Express } from "express";
+import middleware from "./middleware/middleware";
+
+let app: Express = express()
+app = middleware(app)
+
+export default app
