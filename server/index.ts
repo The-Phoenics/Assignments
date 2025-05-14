@@ -3,7 +3,7 @@ dotenv.config();
 
 import { Request, Response } from "express";
 import app from "./app.js";
-import { connectDB } from "./db.js";
+import { connectDB } from "./src/db.js";
 
 app.get('*', (req: Request, res: Response) => {
     res.status(404).json({ message: "404 NOT FOUND" })

@@ -1,0 +1,23 @@
+{
+    "compilerOptions": {
+      "target": "ESNext", // ESNext is for latest version
+      "module": "NodeNext",
+      "rootDir": "./",
+      "sourceMap": true,
+      "noEmitOnError": true,
+      "outDir": "./dist",
+      "removeComments": true,
+      "esModuleInterop": false,
+      "forceConsistentCasingInFileNames": true,
+      "skipLibCheck": true,
+      "allowSyntheticDefaultImports": true,
+      "baseUrl": "./", // for defining base directory for module resolution
+      "paths": {
+        "@models/*": ["src/models/*"],
+        "@controllers/*": ["src/controllers/*"],
+        "@routes/*": ["src/routes/*"],
+        "@services/*": ["src/services/*"],
+        "@middleware/*": ["src/middleware/*"]
+      }
+    }
+  }
