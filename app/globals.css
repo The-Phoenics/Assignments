@@ -3,25 +3,55 @@
 @tailwind utilities;
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --background: #1a1a1a;
+  --foreground: #ededed;
 }
 
 body {
   color: var(--foreground);
   background: var(--background);
   font-family: Arial, Helvetica, sans-serif;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
 }
 
 @layer utilities {
   .text-balance {
     text-wrap: balance;
   }
+}
+
+/* React Flow custom styles */
+.react-flow__node {
+  cursor: pointer;
+}
+
+.react-flow__edge-path {
+  stroke-width: 2;
+}
+
+.react-flow__controls {
+  background: #2a2a2a;
+  border: 1px solid #404040;
+}
+
+.react-flow__controls-button {
+  background: #2a2a2a;
+  border-bottom: 1px solid #404040;
+  color: #9ca3af;
+}
+
+.react-flow__controls-button:hover {
+  background: #333333;
+  color: #e5e7eb;
+}
+
+.react-flow__minimap {
+  background: #2a2a2a;
+  border: 1px solid #404040;
+}
+
+.react-flow__attribution {
+  display: none;
 }

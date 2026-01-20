@@ -5,65 +5,121 @@ import {
   ReactFlow,
   Background,
   Controls,
-  MiniMap,
   addEdge,
   useNodesState,
   useEdgesState,
   type Node,
   type Edge,
   type Connection,
-  type NodeMouseHandler,
+  type NodeTypes,
   BackgroundVariant,
   Panel,
 } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
+import { FileNode } from "./components/FileNode";
+import { TextNode } from "./components/TextNode";
+import { PromptNode } from "./components/PromptNode";
+import { CropNode } from "./components/CropNode";
+import { LLMNode } from "./components/LLMNode";
+import { ExtractVideoFrameNode } from "./components/ExtractVideoFrameNode";
+
+const nodeTypes: NodeTypes = {
+  fileNode: FileNode,
+  textNode: TextNode,
+  promptNode: PromptNode,
+  cropNode: CropNode,
+  llmNode: LLMNode,
+  extractVideoFrameNode: ExtractVideoFrameNode,
+};
 
 const initialNodes: Node[] = [
   {
     id: "1",
-    type: "default",
-    data: { label: "Node 1" },
-    position: { x: 250, y: 100 },
+    type: "fileNode",
+    data: { label: "File" },
+    position: { x: 50, y: 50 },
   },
   {
     id: "2",
-    type: "default",
-    data: { label: "Node 2" },
-    position: { x: 400, y: 250 },
+    type: "textNode",
+    data: { label: "Text" },
+    position: { x: 350, y: 50 },
+  },
+  {
+    id: "3",
+    type: "fileNode",
+    data: { label: "File", imageUrl: "" },
+    position: { x: 350, y: 200 },
+  },
+  {
+    id: "4",
+    type: "promptNode",
+    data: { label: "Prompt" },
+    position: { x: 50, y: 400 },
+  },
+  {
+    id: "5",
+    type: "cropNode",
+    data: { label: "Crop" },
+    position: { x: 350, y: 380 },
+  },
+  {
+    id: "6",
+    type: "llmNode",
+    data: { label: "Any LLM" },
+    position: { x: 650, y: 50 },
+  },
+  {
+    id: "7",
+    type: "extractVideoFrameNode",
+    data: { label: "Extract Video Frame" },
+    position: { x: 650, y: 400 },
   },
 ];
 
 const initialEdges: Edge[] = [
-  { id: "e1-2", source: "1", target: "2", animated: true },
+  {
+    id: "e4-5",
+    source: "4",
+    target: "5",
+    style: { stroke: "#ef4444", strokeWidth: 2 },
+  },
 ];
 
 export default function FlowPage() {
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
   const [selectedNode, setSelectedNode] = useState<string | null>(null);
-  const nodeIdCounter = useRef(3);
+  const nodeIdCounter = useRef(8);
 
   const onConnect = useCallback(
-    (params: Connection) => setEdges((eds) => addEdge(params, eds)),
+    (params: Connection) => {
+      const newEdge = {
+        ...params,
+        style: { stroke: "#ef4444", strokeWidth: 2 },
+      };
+      setEdges((eds) => addEdge(newEdge, eds));
+    },
     [setEdges]
   );
 
-  const onNodeClick: NodeMouseHandler = useCallback(
-    (event, node) => {
-      setSelectedNode(node.id);
-    },
-    []
-  );
+  const addNode = useCallback((type: string) => {
+    const nodeConfig: Record<string, { type: string; data: { label: string } }> = {
+      file: { type: "fileNode", data: { label: "File" } },
+      text: { type: "textNode", data: { label: "Text" } },
+      prompt: { type: "promptNode", data: { label: "Prompt" } },
+      crop: { type: "cropNode", data: { label: "Crop" } },
+      llm: { type: "llmNode", data: { label: "Any LLM" } },
+      extract: { type: "extractVideoFrameNode", data: { label: "Extract Video Frame" } },
+    };
 
-  const onPaneClick = useCallback(() => {
-    setSelectedNode(null);
-  }, []);
+    const config = nodeConfig[type];
+    if (!config) return;
 
-  const addNode = useCallback(() => {
     const newNode: Node = {
       id: `${nodeIdCounter.current}`,
-      type: "default",
-      data: { label: `Node ${nodeIdCounter.current}` },
+      type: config.type,
+      data: config.data,
       position: {
         x: Math.random() * 400 + 100,
         y: Math.random() * 400 + 100,
@@ -73,7 +129,7 @@ export default function FlowPage() {
     setNodes((nds) => [...nds, newNode]);
   }, [setNodes]);
 
-  const deleteNode = useCallback(() => {
+  const deleteSelectedNodes = useCallback(() => {
     if (selectedNode) {
       setNodes((nds) => nds.filter((node) => node.id !== selectedNode));
       setEdges((eds) =>
@@ -85,79 +141,149 @@ export default function FlowPage() {
     }
   }, [selectedNode, setNodes, setEdges]);
 
-  const deleteAllNodes = useCallback(() => {
-    setNodes([]);
-    setEdges([]);
-    setSelectedNode(null);
-  }, [setNodes, setEdges]);
+  const handleUndo = useCallback(() => {
+    // Undo functionality would be implemented here
+    console.log("Undo");
+  }, []);
+
+  const handleRedo = useCallback(() => {
+    // Redo functionality would be implemented here
+    console.log("Redo");
+  }, []);
+
+  const handlePlay = useCallback(() => {
+    // Play functionality would be implemented here
+    console.log("Play");
+  }, []);
 
   return (
-    <div className="h-screen w-screen">
+    <div className="h-screen w-screen bg-[#1a1a1a]">
       <ReactFlow
         nodes={nodes}
         edges={edges}
         onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}
         onConnect={onConnect}
-        onNodeClick={onNodeClick}
-        onPaneClick={onPaneClick}
+        nodeTypes={nodeTypes}
         fitView
-        className="bg-gray-50 dark:bg-gray-900"
+        className="bg-[#1a1a1a]"
+        onNodeClick={(_, node) => setSelectedNode(node.id)}
+        onPaneClick={() => setSelectedNode(null)}
+        defaultEdgeOptions={{
+          style: { stroke: "#ef4444", strokeWidth: 2 },
+        }}
       >
         <Background
           variant={BackgroundVariant.Dots}
-          gap={12}
+          gap={20}
           size={1}
-          color="#94a3b8"
+          color="#333333"
+          className="bg-[#1a1a1a]"
         />
-        <Controls />
-        <MiniMap
-          nodeColor={(node) => {
-            if (node.id === selectedNode) return "#3b82f6";
-            return "#94a3b8";
-          }}
-          className="bg-white dark:bg-gray-800"
-        />
-        <Panel position="top-left" className="space-y-2">
-          <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-lg space-y-2">
-            <h2 className="text-lg font-bold text-gray-800 dark:text-gray-100 mb-3">
-              Flow Controls
-            </h2>
+        <Controls className="bg-[#2a2a2a] border border-gray-700" />
+
+        {/* Bottom Toolbar */}
+        <Panel position="bottom-center" className="mb-4">
+          <div className="bg-[#2a2a2a] border border-gray-700 rounded-lg px-4 py-2 flex items-center gap-4 shadow-xl">
             <button
-              onClick={addNode}
-              className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded transition-colors"
+              onClick={handlePlay}
+              className="bg-yellow-400 hover:bg-yellow-500 text-black rounded p-2 transition-colors"
+              title="Run workflow"
             >
-              Add Node
+              <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M6.3 2.841A1.5 1.5 0 004 4.11V15.89a1.5 1.5 0 002.3 1.269l9.344-5.89a1.5 1.5 0 000-2.538L6.3 2.84z" />
+              </svg>
             </button>
+
+            <div className="h-6 w-px bg-gray-600" />
+
             <button
-              onClick={deleteNode}
-              disabled={!selectedNode}
-              className="w-full bg-red-600 hover:bg-red-700 disabled:bg-gray-400 disabled:cursor-not-allowed text-white font-semibold py-2 px-4 rounded transition-colors"
+              onClick={handleUndo}
+              className="text-gray-400 hover:text-gray-200 p-1 transition-colors"
+              title="Undo"
             >
-              Delete Selected
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6" />
+              </svg>
             </button>
+
             <button
-              onClick={deleteAllNodes}
-              className="w-full bg-orange-600 hover:bg-orange-700 text-white font-semibold py-2 px-4 rounded transition-colors"
+              onClick={handleRedo}
+              className="text-gray-400 hover:text-gray-200 p-1 transition-colors"
+              title="Redo"
             >
-              Clear All
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 10h-10a8 8 0 00-8 8v2M21 10l-6 6m6-6l-6-6" />
+              </svg>
             </button>
-            {selectedNode && (
-              <div className="mt-2 p-2 bg-blue-100 dark:bg-blue-900 rounded text-sm text-blue-800 dark:text-blue-200">
-                Selected: Node {selectedNode}
-              </div>
-            )}
+
+            <div className="h-6 w-px bg-gray-600" />
+
+            <div className="text-gray-400 text-sm font-medium">
+              57%
+            </div>
+
+            <button className="text-gray-400 hover:text-gray-200 p-1 transition-colors">
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+              </svg>
+            </button>
           </div>
-          <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-lg">
-            <h3 className="font-semibold text-gray-800 dark:text-gray-100 mb-2">
-              Instructions:
-            </h3>
-            <ul className="text-sm text-gray-600 dark:text-gray-300 space-y-1">
-              <li>• Click nodes to select them</li>
-              <li>• Drag nodes to move them</li>
-              <li>• Drag from handles to connect</li>
-              <li>• Use controls to zoom/pan</li>
-            </ul>
+        </Panel>
+
+        {/* Add Node Menu */}
+        <Panel position="top-right" className="mt-4 mr-4">
+          <div className="bg-[#2a2a2a] border border-gray-700 rounded-lg p-3 shadow-xl">
+            <h3 className="text-gray-300 text-sm font-semibold mb-2">Add Node</h3>
+            <div className="space-y-1">
+              <button
+                onClick={() => addNode("file")}
+                className="w-full text-left text-gray-300 hover:bg-gray-700 px-3 py-2 rounded text-sm transition-colors"
+              >
+                📁 File
+              </button>
+              <button
+                onClick={() => addNode("text")}
+                className="w-full text-left text-gray-300 hover:bg-gray-700 px-3 py-2 rounded text-sm transition-colors"
+              >
+                📝 Text
+              </button>
+              <button
+                onClick={() => addNode("prompt")}
+                className="w-full text-left text-gray-300 hover:bg-gray-700 px-3 py-2 rounded text-sm transition-colors"
+              >
+                💬 Prompt
+              </button>
+              <button
+                onClick={() => addNode("crop")}
+                className="w-full text-left text-gray-300 hover:bg-gray-700 px-3 py-2 rounded text-sm transition-colors"
+              >
+                ✂️ Crop
+              </button>
+              <button
+                onClick={() => addNode("llm")}
+                className="w-full text-left text-gray-300 hover:bg-gray-700 px-3 py-2 rounded text-sm transition-colors"
+              >
+                🤖 LLM
+              </button>
+              <button
+                onClick={() => addNode("extract")}
+                className="w-full text-left text-gray-300 hover:bg-gray-700 px-3 py-2 rounded text-sm transition-colors"
+              >
+                🎬 Extract Frame
+              </button>
+            </div>
+            {selectedNode && (
+              <>
+                <div className="h-px bg-gray-700 my-2" />
+                <button
+                  onClick={deleteSelectedNodes}
+                  className="w-full text-left text-red-400 hover:bg-red-900 hover:bg-opacity-20 px-3 py-2 rounded text-sm transition-colors"
+                >
+                  🗑️ Delete Selected
+                </button>
+              </>
+            )}
           </div>
         </Panel>
       </ReactFlow>
