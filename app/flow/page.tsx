@@ -175,6 +175,8 @@ function FlowCanvas() {
           defaultEdgeOptions={{
             style: { stroke: "#ef4444", strokeWidth: 2 },
           }}
+          panOnScroll={true}
+          zoomOnScroll={false}
         >
         <Background
           variant={BackgroundVariant.Dots}
