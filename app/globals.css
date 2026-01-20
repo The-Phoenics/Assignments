@@ -55,3 +55,16 @@ body {
 .react-flow__attribution {
   display: none;
 }
+
+/* Ensure proper z-index stacking */
+.react-flow__renderer {
+  z-index: 1;
+}
+
+.react-flow__node {
+  z-index: 2;
+}
+
+.react-flow__edge {
+  z-index: 1;
+}

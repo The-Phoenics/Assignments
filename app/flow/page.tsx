@@ -3,11 +3,13 @@
 import { useCallback, useState, useRef } from "react";
 import {
   ReactFlow,
+  ReactFlowProvider,
   Background,
   Controls,
   addEdge,
   useNodesState,
   useEdgesState,
+  useReactFlow,
   type Node,
   type Edge,
   type Connection,
@@ -22,6 +24,7 @@ import { PromptNode } from "./components/PromptNode";
 import { CropNode } from "./components/CropNode";
 import { LLMNode } from "./components/LLMNode";
 import { ExtractVideoFrameNode } from "./components/ExtractVideoFrameNode";
+import { NodePalette } from "./components/NodePalette";
 
 const nodeTypes: NodeTypes = {
   fileNode: FileNode,
@@ -32,65 +35,16 @@ const nodeTypes: NodeTypes = {
   extractVideoFrameNode: ExtractVideoFrameNode,
 };
 
-const initialNodes: Node[] = [
-  {
-    id: "1",
-    type: "fileNode",
-    data: { label: "File" },
-    position: { x: 50, y: 50 },
-  },
-  {
-    id: "2",
-    type: "textNode",
-    data: { label: "Text" },
-    position: { x: 350, y: 50 },
-  },
-  {
-    id: "3",
-    type: "fileNode",
-    data: { label: "File", imageUrl: "" },
-    position: { x: 350, y: 200 },
-  },
-  {
-    id: "4",
-    type: "promptNode",
-    data: { label: "Prompt" },
-    position: { x: 50, y: 400 },
-  },
-  {
-    id: "5",
-    type: "cropNode",
-    data: { label: "Crop" },
-    position: { x: 350, y: 380 },
-  },
-  {
-    id: "6",
-    type: "llmNode",
-    data: { label: "Any LLM" },
-    position: { x: 650, y: 50 },
-  },
-  {
-    id: "7",
-    type: "extractVideoFrameNode",
-    data: { label: "Extract Video Frame" },
-    position: { x: 650, y: 400 },
-  },
-];
+const initialNodes: Node[] = [];
 
-const initialEdges: Edge[] = [
-  {
-    id: "e4-5",
-    source: "4",
-    target: "5",
-    style: { stroke: "#ef4444", strokeWidth: 2 },
-  },
-];
+const initialEdges: Edge[] = [];
 
-export default function FlowPage() {
+function FlowCanvas() {
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
-  const [selectedNode, setSelectedNode] = useState<string | null>(null);
-  const nodeIdCounter = useRef(8);
+  const nodeIdCounter = useRef(1);
+  const reactFlowWrapper = useRef<HTMLDivElement>(null);
+  const { screenToFlowPosition } = useReactFlow();
 
   const onConnect = useCallback(
     (params: Connection) => {
@@ -103,7 +57,39 @@ export default function FlowPage() {
     [setEdges]
   );
 
-  const addNode = useCallback((type: string) => {
+  const duplicateNode = useCallback((nodeId: string) => {
+    setNodes((nds) => {
+      const nodeToDuplicate = nds.find((n) => n.id === nodeId);
+      if (!nodeToDuplicate) return nds;
+
+      const newNode: Node = {
+        ...nodeToDuplicate,
+        id: `${nodeIdCounter.current}`,
+        position: {
+          x: nodeToDuplicate.position.x + 50,
+          y: nodeToDuplicate.position.y + 50,
+        },
+        data: {
+          ...nodeToDuplicate.data,
+          onDuplicate: duplicateNode,
+          onDelete: deleteNode,
+        },
+      };
+      nodeIdCounter.current += 1;
+      return [...nds, newNode];
+    });
+  }, []);
+
+  const deleteNode = useCallback((nodeId: string) => {
+    setNodes((nds) => nds.filter((node) => node.id !== nodeId));
+    setEdges((eds) =>
+      eds.filter(
+        (edge) => edge.source !== nodeId && edge.target !== nodeId
+      )
+    );
+  }, [setNodes, setEdges]);
+
+  const createNode = useCallback((type: string, position: { x: number; y: number }) => {
     const nodeConfig: Record<string, { type: string; data: { label: string } }> = {
       file: { type: "fileNode", data: { label: "File" } },
       text: { type: "textNode", data: { label: "Text" } },
@@ -119,27 +105,43 @@ export default function FlowPage() {
     const newNode: Node = {
       id: `${nodeIdCounter.current}`,
       type: config.type,
-      data: config.data,
-      position: {
-        x: Math.random() * 400 + 100,
-        y: Math.random() * 400 + 100,
+      data: {
+        ...config.data,
+        onDuplicate: duplicateNode,
+        onDelete: deleteNode,
       },
+      position,
     };
     nodeIdCounter.current += 1;
     setNodes((nds) => [...nds, newNode]);
-  }, [setNodes]);
+  }, [duplicateNode, deleteNode, setNodes]);
 
-  const deleteSelectedNodes = useCallback(() => {
-    if (selectedNode) {
-      setNodes((nds) => nds.filter((node) => node.id !== selectedNode));
-      setEdges((eds) =>
-        eds.filter(
-          (edge) => edge.source !== selectedNode && edge.target !== selectedNode
-        )
-      );
-      setSelectedNode(null);
-    }
-  }, [selectedNode, setNodes, setEdges]);
+  const onDragOver = useCallback((event: React.DragEvent) => {
+    event.preventDefault();
+    event.dataTransfer.dropEffect = "move";
+  }, []);
+
+  const onDrop = useCallback(
+    (event: React.DragEvent) => {
+      event.preventDefault();
+
+      const type = event.dataTransfer.getData("application/reactflow");
+      if (!type) return;
+
+      const position = screenToFlowPosition({
+        x: event.clientX,
+        y: event.clientY,
+      });
+
+      createNode(type, position);
+    },
+    [screenToFlowPosition, createNode]
+  );
+
+  const onNodeDragStart = useCallback((event: React.DragEvent, nodeType: string) => {
+    event.dataTransfer.setData("application/reactflow", nodeType);
+    event.dataTransfer.effectAllowed = "move";
+  }, []);
 
   const handleUndo = useCallback(() => {
     // Undo functionality would be implemented here
@@ -157,18 +159,18 @@ export default function FlowPage() {
   }, []);
 
   return (
-    <div className="h-screen w-screen bg-[#1a1a1a]">
+    <div className="h-screen w-screen bg-[#1a1a1a]" ref={reactFlowWrapper}>
       <ReactFlow
         nodes={nodes}
         edges={edges}
         onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}
         onConnect={onConnect}
+        onDrop={onDrop}
+        onDragOver={onDragOver}
         nodeTypes={nodeTypes}
         fitView
         className="bg-[#1a1a1a]"
-        onNodeClick={(_, node) => setSelectedNode(node.id)}
-        onPaneClick={() => setSelectedNode(null)}
         defaultEdgeOptions={{
           style: { stroke: "#ef4444", strokeWidth: 2 },
         }}
@@ -181,6 +183,11 @@ export default function FlowPage() {
           className="bg-[#1a1a1a]"
         />
         <Controls className="bg-[#2a2a2a] border border-gray-700" />
+
+        {/* Node Palette - Top Left */}
+        <Panel position="top-left" className="mt-4 ml-4">
+          <NodePalette onNodeDragStart={onNodeDragStart} />
+        </Panel>
 
         {/* Bottom Toolbar */}
         <Panel position="bottom-center" className="mb-4">
@@ -230,63 +237,15 @@ export default function FlowPage() {
             </button>
           </div>
         </Panel>
-
-        {/* Add Node Menu */}
-        <Panel position="top-right" className="mt-4 mr-4">
-          <div className="bg-[#2a2a2a] border border-gray-700 rounded-lg p-3 shadow-xl">
-            <h3 className="text-gray-300 text-sm font-semibold mb-2">Add Node</h3>
-            <div className="space-y-1">
-              <button
-                onClick={() => addNode("file")}
-                className="w-full text-left text-gray-300 hover:bg-gray-700 px-3 py-2 rounded text-sm transition-colors"
-              >
-                📁 File
-              </button>
-              <button
-                onClick={() => addNode("text")}
-                className="w-full text-left text-gray-300 hover:bg-gray-700 px-3 py-2 rounded text-sm transition-colors"
-              >
-                📝 Text
-              </button>
-              <button
-                onClick={() => addNode("prompt")}
-                className="w-full text-left text-gray-300 hover:bg-gray-700 px-3 py-2 rounded text-sm transition-colors"
-              >
-                💬 Prompt
-              </button>
-              <button
-                onClick={() => addNode("crop")}
-                className="w-full text-left text-gray-300 hover:bg-gray-700 px-3 py-2 rounded text-sm transition-colors"
-              >
-                ✂️ Crop
-              </button>
-              <button
-                onClick={() => addNode("llm")}
-                className="w-full text-left text-gray-300 hover:bg-gray-700 px-3 py-2 rounded text-sm transition-colors"
-              >
-                🤖 LLM
-              </button>
-              <button
-                onClick={() => addNode("extract")}
-                className="w-full text-left text-gray-300 hover:bg-gray-700 px-3 py-2 rounded text-sm transition-colors"
-              >
-                🎬 Extract Frame
-              </button>
-            </div>
-            {selectedNode && (
-              <>
-                <div className="h-px bg-gray-700 my-2" />
-                <button
-                  onClick={deleteSelectedNodes}
-                  className="w-full text-left text-red-400 hover:bg-red-900 hover:bg-opacity-20 px-3 py-2 rounded text-sm transition-colors"
-                >
-                  🗑️ Delete Selected
-                </button>
-              </>
-            )}
-          </div>
-        </Panel>
       </ReactFlow>
     </div>
+  );
+}
+
+export default function FlowPage() {
+  return (
+    <ReactFlowProvider>
+      <FlowCanvas />
+    </ReactFlowProvider>
   );
 }

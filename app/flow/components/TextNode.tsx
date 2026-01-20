@@ -1,17 +1,11 @@
 import { Handle, Position } from "@xyflow/react";
+import { NodeWrapper } from "./NodeWrapper";
 
-export function TextNode({ data }: { data: { label?: string } }) {
+export function TextNode({ data, id }: { data: { label?: string; text?: string; onDuplicate: (id: string) => void; onDelete: (id: string) => void }; id: string }) {
   return (
     <div className="bg-[#2a2a2a] rounded-lg shadow-xl border border-gray-700 min-w-[220px]">
       <Handle type="target" position={Position.Left} className="w-3 h-3 bg-pink-500 border-2 border-white" />
-      <div className="flex items-center justify-between px-3 py-2 border-b border-gray-700">
-        <span className="text-gray-300 text-sm font-medium">Text</span>
-        <button className="text-gray-500 hover:text-gray-300">
-          <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-            <path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z" />
-          </svg>
-        </button>
-      </div>
+      <NodeWrapper title="Text" nodeId={id} onDuplicate={data.onDuplicate} onDelete={data.onDelete}>
       <div className="p-3">
         <textarea
           className="w-full h-24 bg-[#1a1a1a] text-gray-300 rounded px-3 py-2 text-sm resize-none focus:outline-none focus:ring-1 focus:ring-gray-600"
@@ -19,6 +13,7 @@ export function TextNode({ data }: { data: { label?: string } }) {
           defaultValue={data.text ?? ""}
         />
       </div>
+      </NodeWrapper>
       <Handle type="source" position={Position.Right} className="w-3 h-3 bg-pink-500 border-2 border-white" />
     </div>
   );
