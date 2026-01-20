@@ -5,7 +5,6 @@ import {
   ReactFlow,
   ReactFlowProvider,
   Background,
-  Controls,
   addEdge,
   useNodesState,
   useEdgesState,
@@ -184,7 +183,6 @@ function FlowCanvas() {
           color="#333333"
           className="bg-[#1a1a1a]"
         />
-        <Controls className="bg-[#2a2a2a] border border-gray-700" />
 
         {/* Bottom Toolbar */}
         <Panel position="bottom-center" className="mb-4">
