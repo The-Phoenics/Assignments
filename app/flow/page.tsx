@@ -24,7 +24,7 @@ import { PromptNode } from "./components/PromptNode";
 import { CropNode } from "./components/CropNode";
 import { LLMNode } from "./components/LLMNode";
 import { ExtractVideoFrameNode } from "./components/ExtractVideoFrameNode";
-import { NodePalette } from "./components/NodePalette";
+import { Sidebar } from "./components/Sidebar";
 
 const nodeTypes: NodeTypes = {
   fileNode: FileNode,
@@ -160,21 +160,23 @@ function FlowCanvas() {
 
   return (
     <div className="h-screen w-screen bg-[#1a1a1a]" ref={reactFlowWrapper}>
-      <ReactFlow
-        nodes={nodes}
-        edges={edges}
-        onNodesChange={onNodesChange}
-        onEdgesChange={onEdgesChange}
-        onConnect={onConnect}
-        onDrop={onDrop}
-        onDragOver={onDragOver}
-        nodeTypes={nodeTypes}
-        fitView
-        className="bg-[#1a1a1a]"
-        defaultEdgeOptions={{
-          style: { stroke: "#ef4444", strokeWidth: 2 },
-        }}
-      >
+      <Sidebar onNodeDragStart={onNodeDragStart} />
+      <div className="h-full w-full pl-[52px]">
+        <ReactFlow
+          nodes={nodes}
+          edges={edges}
+          onNodesChange={onNodesChange}
+          onEdgesChange={onEdgesChange}
+          onConnect={onConnect}
+          onDrop={onDrop}
+          onDragOver={onDragOver}
+          nodeTypes={nodeTypes}
+          fitView
+          className="bg-[#1a1a1a]"
+          defaultEdgeOptions={{
+            style: { stroke: "#ef4444", strokeWidth: 2 },
+          }}
+        >
         <Background
           variant={BackgroundVariant.Dots}
           gap={20}
@@ -183,11 +185,6 @@ function FlowCanvas() {
           className="bg-[#1a1a1a]"
         />
         <Controls className="bg-[#2a2a2a] border border-gray-700" />
-
-        {/* Node Palette - Top Left */}
-        <Panel position="top-left" className="mt-4 ml-4">
-          <NodePalette onNodeDragStart={onNodeDragStart} />
-        </Panel>
 
         {/* Bottom Toolbar */}
         <Panel position="bottom-center" className="mb-4">
@@ -238,6 +235,7 @@ function FlowCanvas() {
           </div>
         </Panel>
       </ReactFlow>
+      </div>
     </div>
   );
 }

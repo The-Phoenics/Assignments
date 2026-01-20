@@ -68,3 +68,12 @@ body {
 .react-flow__edge {
   z-index: 1;
 }
+
+/* Ensure ReactFlow pane can receive drop events */
+.react-flow__pane {
+  z-index: 1;
+}
+
+.react-flow {
+  z-index: 1;
+}
