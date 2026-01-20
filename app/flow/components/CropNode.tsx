@@ -3,14 +3,14 @@ import { NodeWrapper } from "./NodeWrapper";
 
 export function CropNode({ data, id }: { data: { label?: string; onDuplicate: (id: string) => void; onDelete: (id: string) => void }; id: string }) {
   return (
-    <div className="bg-[#2a2a2a] rounded-lg shadow-xl border border-gray-700 min-w-[220px]">
+    <div className="bg-[#212125] rounded-lg shadow-xl border border-gray-700 min-w-[220px]">
       <Handle type="target" position={Position.Left} className="w-3 h-3 bg-pink-500 border-2 border-white" />
       <NodeWrapper title="Crop" nodeId={id} onDuplicate={data.onDuplicate} onDelete={data.onDelete}>
       <div className="p-3">
         <div
           className="w-full h-48 rounded mb-3"
           style={{
-            backgroundImage: 'repeating-linear-gradient(45deg, #1a1a1a, #1a1a1a 10px, #252525 10px, #252525 20px)',
+            backgroundImage: 'repeating-linear-gradient(45deg, #353539, #353539 10px, #3a3a3e 10px, #3a3a3e 20px)',
           }}
         />
         <div className="space-y-2">
@@ -19,7 +19,7 @@ export function CropNode({ data, id }: { data: { label?: string; onDuplicate: (i
             <button className="text-gray-400 hover:text-gray-300">Reset</button>
           </div>
           <div className="flex gap-2">
-            <select className="flex-1 bg-[#1a1a1a] text-gray-300 rounded px-2 py-1 text-sm focus:outline-none focus:ring-1 focus:ring-gray-600">
+            <select className="flex-1 bg-[#353539] text-[#FFFFFF] rounded px-2 py-1 text-sm focus:outline-none focus:ring-1 focus:ring-gray-600">
               <option>Custom</option>
               <option>16:9</option>
               <option>4:3</option>
@@ -33,7 +33,7 @@ export function CropNode({ data, id }: { data: { label?: string; onDuplicate: (i
                 <input
                   type="text"
                   defaultValue="1024"
-                  className="w-full bg-[#1a1a1a] text-gray-300 rounded px-2 py-1 text-sm focus:outline-none focus:ring-1 focus:ring-gray-600"
+                  className="w-full bg-[#353539] text-[#FFFFFF] rounded px-2 py-1 text-sm focus:outline-none focus:ring-1 focus:ring-gray-600"
                 />
               </div>
             </div>
@@ -42,7 +42,7 @@ export function CropNode({ data, id }: { data: { label?: string; onDuplicate: (i
               <input
                 type="text"
                 defaultValue="1024"
-                className="w-full bg-[#1a1a1a] text-gray-300 rounded px-2 py-1 text-sm mt-1 focus:outline-none focus:ring-1 focus:ring-gray-600"
+                className="w-full bg-[#353539] text-[#FFFFFF] rounded px-2 py-1 text-sm mt-1 focus:outline-none focus:ring-1 focus:ring-gray-600"
               />
             </div>
           </div>

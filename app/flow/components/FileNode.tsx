@@ -14,7 +14,7 @@ export function FileNode({ data, id }: { data: { label?: string; onDuplicate: (i
   };
 
   return (
-    <div className="bg-[#2a2a2a] rounded-lg shadow-xl border border-gray-700 min-w-[220px]">
+    <div className="bg-[#212125] rounded-lg shadow-xl border border-gray-700 min-w-[220px]">
       <Handle type="target" position={Position.Left} className="w-3 h-3 bg-pink-500 border-2 border-white" />
       <NodeWrapper title="File" nodeId={id} onDuplicate={data.onDuplicate} onDelete={data.onDelete}>
       <div className="p-3">
@@ -30,7 +30,7 @@ export function FileNode({ data, id }: { data: { label?: string; onDuplicate: (i
           </div>
         ) : (
           <label className="block">
-            <div className="border-2 border-dashed border-gray-600 rounded bg-[#1a1a1a] bg-opacity-50 h-32 flex flex-col items-center justify-center cursor-pointer hover:border-gray-500 transition-colors"
+            <div className="border-2 border-dashed border-gray-600 rounded bg-[#353539] h-32 flex flex-col items-center justify-center cursor-pointer hover:border-gray-500 transition-colors"
               style={{
                 backgroundImage: 'repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(255,255,255,.02) 10px, rgba(255,255,255,.02) 20px)',
               }}

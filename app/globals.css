@@ -5,12 +5,13 @@
 :root {
   --background: #1a1a1a;
   --foreground: #ededed;
+  --font-dm-sans: "DM Sans", system-ui, -apple-system, sans-serif;
 }
 
 body {
   color: var(--foreground);
   background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-dm-sans);
   margin: 0;
   padding: 0;
   overflow: hidden;

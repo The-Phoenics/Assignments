@@ -59,7 +59,7 @@ export function Sidebar({ onNodeDragStart }: SidebarProps) {
               onClick={() => toggleSection("quickaccess")}
               className={`flex items-center justify-center h-12 transition-colors ${
                 activeSection === "quickaccess" 
-                  ? "bg-yellow-400 bg-opacity-20 text-yellow-400" 
+                  ? "bg-[#F7FFA8] text-gray-800" 
                   : "text-gray-400 hover:bg-gray-800"
               }`}
             >
@@ -177,7 +177,7 @@ export function Sidebar({ onNodeDragStart }: SidebarProps) {
             </div>
 
             {/* Toolbox */}
-            <div className="px-4 pb-4">
+            {/* <div className="px-4 pb-4">
               <h3 className="text-white text-sm font-semibold mb-2">Toolbox</h3>
               <div className="mb-3">
                 <h4 className="text-gray-400 text-xs mb-2">Editing</h4>
@@ -200,7 +200,7 @@ export function Sidebar({ onNodeDragStart }: SidebarProps) {
                   </button>
                 </div>
               </div>
-            </div>
+            </div> */}
           </div>
         )}
 

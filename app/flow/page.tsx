@@ -171,7 +171,7 @@ function FlowCanvas() {
           onDragOver={onDragOver}
           nodeTypes={nodeTypes}
           fitView
-          className="bg-[#1a1a1a]"
+          className="bg-[#C0E0E1]"
           defaultEdgeOptions={{
             style: { stroke: "#ef4444", strokeWidth: 2 },
           }}
@@ -180,8 +180,8 @@ function FlowCanvas() {
           variant={BackgroundVariant.Dots}
           gap={20}
           size={1}
-          color="#333333"
-          className="bg-[#1a1a1a]"
+          color="#FFFFFF"
+          className="bg-[#C0E0E1]"
         />
 
         {/* Bottom Toolbar */}

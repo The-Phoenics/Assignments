@@ -3,7 +3,7 @@ import { NodeWrapper } from "./NodeWrapper";
 
 export function LLMNode({ data, id }: { data: { label?: string; onDuplicate: (id: string) => void; onDelete: (id: string) => void }; id: string }) {
   return (
-    <div className="bg-[#2a2a2a] rounded-lg shadow-xl border border-gray-700 min-w-[220px]">
+    <div className="bg-[#212125] rounded-lg shadow-xl border border-gray-700 min-w-[220px]">
       <Handle type="target" position={Position.Left} className="w-3 h-3 bg-pink-500 border-2 border-white" />
       <Handle
         type="target"
@@ -21,7 +21,7 @@ export function LLMNode({ data, id }: { data: { label?: string; onDuplicate: (id
       />
       <NodeWrapper title="Any LLM" nodeId={id} onDuplicate={data.onDuplicate} onDelete={data.onDelete}>
       <div className="p-3">
-        <div className="w-full h-48 rounded bg-[#1a1a1a] flex items-center justify-center mb-3">
+        <div className="w-full h-48 rounded bg-[#353539] flex items-center justify-center mb-3">
           <span className="text-gray-500 text-sm">The generated text will appear here</span>
         </div>
         <button className="text-gray-400 text-xs hover:text-gray-300 mb-2">
