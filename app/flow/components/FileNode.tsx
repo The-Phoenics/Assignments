@@ -1,6 +1,7 @@
 import { Handle, Position } from "@xyflow/react";
 import { useState } from "react";
 import { NodeWrapper } from "./NodeWrapper";
+import { HANDLES_COLORS } from "@/app/lib/constants";
 
 export function FileNode({ data, id }: { data: { label?: string; onDuplicate: (id: string) => void; onDelete: (id: string) => void }; id: string }) {
   const [imageUrl, setImageUrl] = useState<string | null>(data.imageUrl ?? null);
@@ -52,8 +53,9 @@ export function FileNode({ data, id }: { data: { label?: string; onDuplicate: (i
       <div className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-1/2 w-4 h-4 rounded-full bg-[#212125] flex items-center justify-center">
         <Handle 
           type="source" 
-          position={Position.Right} 
-          className="w-5 h-5 bg-pink-500 border-2 border-white rounded-full"
+          position={Position.Right}
+          id="image-output"
+          className={`w-5 h-5 ${HANDLES_COLORS.image} border-2 border-white rounded-full`}
           style={{ position: 'relative', transform: 'none', top: 'auto', right: 'auto', left: 'auto', bottom: 'auto' }}
         />
       </div>

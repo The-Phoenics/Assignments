@@ -45,6 +45,21 @@ function FlowCanvas() {
   const reactFlowWrapper = useRef<HTMLDivElement>(null);
   const { screenToFlowPosition } = useReactFlow();
 
+  const isValidConnection = useCallback((connection: Connection) => {
+    // Extract handle types from handle IDs
+    const sourceHandleId = connection.sourceHandle;
+    const targetHandleId = connection.targetHandle;
+    
+    if (!sourceHandleId || !targetHandleId) return true;
+    
+    // Get the type from handle ID (format: "type-input" or "type-output")
+    const sourceType = sourceHandleId.split('-')[0];
+    const targetType = targetHandleId.split('-')[0];
+    
+    // Only allow connections between same types
+    return sourceType === targetType;
+  }, []);
+
   const onConnect = useCallback(
     (params: Connection) => {
       const newEdge = {
@@ -170,6 +185,7 @@ function FlowCanvas() {
           onDrop={onDrop}
           onDragOver={onDragOver}
           nodeTypes={nodeTypes}
+          isValidConnection={isValidConnection}
           fitView
           className="bg-[#C0E0E1]"
           defaultEdgeOptions={{
