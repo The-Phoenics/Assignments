@@ -5,7 +5,7 @@ import { HANDLE_COLORS_HEX } from "@/app/lib/constants";
 export function PromptNode({ data, id }: { data: { label?: string; text?: string; onDuplicate: (id: string) => void; onDelete: (id: string) => void; edges?: Edge[] }; id: string }) {
   const isHandleConnected = (handleId: string, handleType: 'source' | 'target') => {
     if (!data.edges) return false;
-    return data.edges.some(edge => 
+    return data.edges.some(edge =>
       handleType === 'source' 
         ? edge.source === id && edge.sourceHandle === handleId
         : edge.target === id && edge.targetHandle === handleId
@@ -14,12 +14,19 @@ export function PromptNode({ data, id }: { data: { label?: string; text?: string
 
   const promptOutputConnected = isHandleConnected('prompt-output', 'source');
   return (
-    <div className="bg-[#212125] rounded-lg shadow-xl min-w-[20px] relative">
+    <div className="bg-[#222226] rounded-lg shadow-xl w-[280px] relative">
       <NodeWrapper title="Prompt" nodeId={id} onDuplicate={data.onDuplicate} onDelete={data.onDelete}>
       <div className="p-3">
-        <div className="bg-[#353539] text-[#FFFFFF] rounded px-3 py-2 text-sm min-h-[150px]">
-          {data.text ?? "Hipster Sisyphus, lime dots overall suit, pushing a huge round rock up a hill. The rock is sprayed with the text 'default prompt', bright gray background extreme side long shot, cinematic, fashion style, side view"}
-        </div>
+        <textarea
+          className="w-full bg-[#353539] text-[#FFFFFF] rounded px-3 py-2 text-sm resize-none focus:outline-none focus:ring-1 focus:ring-gray-600 overflow-hidden"
+          placeholder="Enter your prompt here..."
+          defaultValue={data.text ?? "Hipster Sisyphus, lime dots overall suit, pushing a huge round rock up a hill. The rock is sprayed with the text 'default prompt', bright gray background extreme side long shot, cinematic, fashion style, side view"}
+          rows={6}
+          onInput={(e) => {
+            e.currentTarget.style.height = 'auto';
+            e.currentTarget.style.height = e.currentTarget.scrollHeight + 'px';
+          }}
+        />
       </div>
       </NodeWrapper>
       <div className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-1/2 w-4 h-4 rounded-full bg-[#212125] flex items-center justify-center">

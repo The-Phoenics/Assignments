@@ -15,7 +15,7 @@ export function CropNode({ data, id }: { data: { label?: string; onDuplicate: (i
   const imageInputConnected = isHandleConnected('image-input', 'target');
   const imageOutputConnected = isHandleConnected('image-output', 'source');
   return (
-    <div className="bg-[#212125] rounded-lg shadow-xl min-w-[220px] relative">
+    <div className="bg-[#222226] rounded-lg shadow-xl min-w-[220px] relative">
       <div className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-1/2 w-4 h-4 rounded-full bg-[#212125] flex items-center justify-center">
         <Handle 
           type="target" 

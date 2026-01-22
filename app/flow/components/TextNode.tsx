@@ -14,7 +14,7 @@ export function TextNode({ data, id }: { data: { label?: string; text?: string; 
 
   const textOutputConnected = isHandleConnected('text-output', 'source');
   return (
-    <div className="bg-[#212125] rounded-lg shadow-xl min-w-[220px] relative">
+    <div className="bg-[#222226] rounded-lg shadow-xl min-w-[220px] relative">
       <NodeWrapper title="Text" nodeId={id} onDuplicate={data.onDuplicate} onDelete={data.onDelete}>
       <div className="p-3">
         <textarea

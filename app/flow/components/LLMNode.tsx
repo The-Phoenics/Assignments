@@ -1,6 +1,6 @@
 import { Handle, Position, type Edge } from "@xyflow/react";
 import { NodeWrapper } from "./NodeWrapper";
-import { HANDLES_COLORS, HANDLE_BORDER_COLORS, HANDLE_COLORS_HEX } from "@/app/lib/constants";
+import { HANDLE_COLORS_HEX } from "@/app/lib/constants";
 
 export function LLMNode({ data, id }: { data: { label?: string; onDuplicate: (id: string) => void; onDelete: (id: string) => void; edges?: Edge[] }; id: string }) {
   const isHandleConnected = (handleId: string, handleType: 'source' | 'target') => {
@@ -17,7 +17,7 @@ export function LLMNode({ data, id }: { data: { label?: string; onDuplicate: (id
   const videoInputConnected = isHandleConnected('video-input', 'target');
   const textOutputConnected = isHandleConnected('text-output', 'source');
   return (
-    <div className="bg-[#212125] rounded-lg shadow-xl min-w-[220px] relative">
+    <div className="bg-[#222226] rounded-lg shadow-xl min-w-[350px] relative pt-4">
       <div className="absolute left-0 top-[20%] -translate-y-1/2 -translate-x-1/2 w-4 h-4 rounded-full bg-[#212125] flex items-center justify-center">
         <Handle 
           type="target" 
@@ -71,11 +71,12 @@ export function LLMNode({ data, id }: { data: { label?: string; onDuplicate: (id
         <div className="w-full h-48 rounded bg-[#353539] flex items-center justify-center mb-3">
           <span className="text-gray-500 text-sm">The generated text will appear here</span>
         </div>
-        <button className="text-gray-400 text-xs hover:text-gray-300 mb-2">
+        <button className="text-gray-400 text-xs hover:text-gray-300 mb-2 block">
           + Add another image input
         </button>
-        <button className="w-full bg-gray-700 hover:bg-gray-600 text-white font-medium py-2 px-4 rounded transition-colors">
-          Run Model
+        <button className="w-full border border-gray-600 hover:border-gray-500 text-white font-medium py-2 px-4 rounded transition-colors flex items-center justify-center gap-2">
+          <span>→</span>
+          <span>Run Model</span>
         </button>
       </div>
       </NodeWrapper>

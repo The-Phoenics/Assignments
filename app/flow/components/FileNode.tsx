@@ -25,7 +25,7 @@ export function FileNode({ data, id }: { data: { label?: string; onDuplicate: (i
   };
 
   return (
-    <div className="bg-[#212125] rounded-lg shadow-xl min-w-[220px] relative">
+    <div className="bg-[#222226] rounded-lg shadow-xl min-w-[220px] relative">
       <NodeWrapper title="File" nodeId={id} onDuplicate={data.onDuplicate} onDelete={data.onDelete}>
       <div className="p-3">
         {imageUrl ? (

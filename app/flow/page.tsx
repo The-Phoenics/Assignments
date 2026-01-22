@@ -226,8 +226,8 @@ function FlowCanvas() {
           variant={BackgroundVariant.Dots}
           gap={20}
           size={1}
-          color="#FFFFFF"
-          className="bg-[#C0E0E1]"
+          color="#4a464f"
+          className="bg-[#0d0d12]"
         />
 
         {/* Bottom Toolbar */}
