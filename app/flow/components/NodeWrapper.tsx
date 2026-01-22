@@ -90,12 +90,12 @@ export function NodeWrapper({ title, children, nodeId, onDuplicate, onDelete }: 
 
   return (
     <>
-      <div className="flex items-center justify-between px-3 py-2 border-b border-gray-700">
+      <div className="flex items-center justify-between px-3 py-2">
         <span className="text-gray-300 text-sm font-medium">{title}</span>
         <button
           ref={buttonRef}
           onClick={handleMenuClick}
-          className="text-gray-500 hover:text-gray-300 relative"
+          className="text-gray-500 hover:text-gray-300 relative rotate-90"
         >
           <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
             <path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z" />

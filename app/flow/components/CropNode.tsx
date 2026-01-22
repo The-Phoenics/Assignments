@@ -3,8 +3,18 @@ import { NodeWrapper } from "./NodeWrapper";
 
 export function CropNode({ data, id }: { data: { label?: string; onDuplicate: (id: string) => void; onDelete: (id: string) => void }; id: string }) {
   return (
-    <div className="bg-[#212125] rounded-lg shadow-xl border border-gray-700 min-w-[220px]">
-      <Handle type="target" position={Position.Left} className="w-3 h-3 bg-pink-500 border-2 border-white" />
+    <div className="bg-[#212125] rounded-lg shadow-xl min-w-[220px] relative">
+      <div className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-1/2 w-4 h-4 rounded-full bg-[#212125] flex items-center justify-center">
+        <Handle 
+          type="target" 
+          position={Position.Left} 
+          className="w-5 h-5 bg-pink-500 border-2 border-white rounded-full"
+          style={{ position: 'relative', transform: 'none', top: 'auto', right: 'auto', left: 'auto', bottom: 'auto' }}
+        />
+      </div>
+      <div className="absolute -left-12 top-[40%] -translate-y-1/2 text-xs text-gray-400 whitespace-nowrap">
+        Image
+      </div>
       <NodeWrapper title="Crop" nodeId={id} onDuplicate={data.onDuplicate} onDelete={data.onDelete}>
       <div className="p-3">
         <div
@@ -49,7 +59,17 @@ export function CropNode({ data, id }: { data: { label?: string; onDuplicate: (i
         </div>
       </div>
       </NodeWrapper>
-      <Handle type="source" position={Position.Right} className="w-3 h-3 bg-pink-500 border-2 border-white" />
+      <div className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-1/2 w-4 h-4 rounded-full bg-[#212125] flex items-center justify-center">
+        <Handle 
+          type="source" 
+          position={Position.Right} 
+          className="w-5 h-5 bg-pink-500 border-2 border-white rounded-full"
+          style={{ position: 'relative', transform: 'none', top: 'auto', right: 'auto', left: 'auto', bottom: 'auto' }}
+        />
+      </div>
+      <div className="absolute -right-10 top-[40%] -translate-y-1/2 text-xs text-gray-400 whitespace-nowrap">
+        Image
+      </div>
     </div>
   );
 }
