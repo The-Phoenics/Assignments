@@ -1,9 +1,19 @@
-import { Handle, Position } from "@xyflow/react";
+import { Handle, Position, type Edge } from "@xyflow/react";
 import { useState } from "react";
 import { NodeWrapper } from "./NodeWrapper";
-import { HANDLES_COLORS } from "@/app/lib/constants";
+import { HANDLES_COLORS, HANDLE_BORDER_COLORS, HANDLE_COLORS_HEX } from "@/app/lib/constants";
 
-export function FileNode({ data, id }: { data: { label?: string; onDuplicate: (id: string) => void; onDelete: (id: string) => void }; id: string }) {
+export function FileNode({ data, id }: { data: { label?: string; onDuplicate: (id: string) => void; onDelete: (id: string) => void; edges?: Edge[]; imageUrl?: string }; id: string }) {
+  const isHandleConnected = (handleId: string, handleType: 'source' | 'target') => {
+    if (!data.edges) return false;
+    return data.edges.some(edge => 
+      handleType === 'source' 
+        ? edge.source === id && edge.sourceHandle === handleId
+        : edge.target === id && edge.targetHandle === handleId
+    );
+  };
+
+  const imageOutputConnected = isHandleConnected('image-output', 'source');
   const [imageUrl, setImageUrl] = useState<string | null>(data.imageUrl ?? null);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -55,9 +65,13 @@ export function FileNode({ data, id }: { data: { label?: string; onDuplicate: (i
           type="source" 
           position={Position.Right}
           id="image-output"
-          className={`w-5 h-5 ${HANDLES_COLORS.image} border-2 border-white rounded-full`}
-          style={{ position: 'relative', transform: 'none', top: 'auto', right: 'auto', left: 'auto', bottom: 'auto' }}
-        />
+          className={`w-5 h-5 border-2 rounded-full flex items-center justify-center p-1`}
+          style={{ position: 'relative', transform: 'none', top: 'auto', right: 'auto', left: 'auto', bottom: 'auto', borderColor: HANDLE_COLORS_HEX.image }}
+        >
+          <div className="rounded-full w-1 h-1 p-[2px]" style={{
+            backgroundColor: imageOutputConnected ? HANDLE_COLORS_HEX.image : 'transparent'
+          }} />
+        </Handle>
       </div>
       <div className="absolute -right-10 top-[40%] -translate-y-1/2 text-xs text-gray-400 whitespace-nowrap">
         Image

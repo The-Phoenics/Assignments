@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useState, useRef } from "react";
+import React, { useCallback, useState, useRef } from "react";
 import {
   ReactFlow,
   ReactFlowProvider,
@@ -24,6 +24,7 @@ import { CropNode } from "./components/CropNode";
 import { LLMNode } from "./components/LLMNode";
 import { ExtractVideoFrameNode } from "./components/ExtractVideoFrameNode";
 import { Sidebar } from "./components/Sidebar";
+import { HANDLE_COLORS_HEX } from "@/app/lib/constants";
 
 const nodeTypes: NodeTypes = {
   fileNode: FileNode,
@@ -62,9 +63,16 @@ function FlowCanvas() {
 
   const onConnect = useCallback(
     (params: Connection) => {
+      // Get the handle type from the source handle ID
+      const sourceHandleId = params.sourceHandle;
+      const handleType = sourceHandleId?.split('-')[0] as keyof typeof HANDLE_COLORS_HEX;
+      const edgeColor = handleType && HANDLE_COLORS_HEX[handleType] 
+        ? HANDLE_COLORS_HEX[handleType] 
+        : "#ef4444";
+      
       const newEdge = {
         ...params,
-        style: { stroke: "#ef4444", strokeWidth: 2 },
+        style: { stroke: edgeColor, strokeWidth: 2 },
       };
       setEdges((eds) => addEdge(newEdge, eds));
     },
@@ -87,12 +95,13 @@ function FlowCanvas() {
           ...nodeToDuplicate.data,
           onDuplicate: duplicateNode,
           onDelete: deleteNode,
+          edges,
         },
       };
       nodeIdCounter.current += 1;
       return [...nds, newNode];
     });
-  }, []);
+  }, [edges]);
 
   const deleteNode = useCallback((nodeId: string) => {
     setNodes((nds) => nds.filter((node) => node.id !== nodeId));
@@ -102,6 +111,24 @@ function FlowCanvas() {
       )
     );
   }, [setNodes, setEdges]);
+
+  // Update node data with edges whenever edges change
+  const updateNodeEdges = useCallback(() => {
+    setNodes((nds) =>
+      nds.map((node) => ({
+        ...node,
+        data: {
+          ...node.data,
+          edges,
+        },
+      }))
+    );
+  }, [edges, setNodes]);
+
+  // Effect to update nodes when edges change
+  React.useEffect(() => {
+    updateNodeEdges();
+  }, [edges]);
 
   const createNode = useCallback((type: string, position: { x: number; y: number }) => {
     const nodeConfig: Record<string, { type: string; data: { label: string } }> = {
@@ -123,12 +150,13 @@ function FlowCanvas() {
         ...config.data,
         onDuplicate: duplicateNode,
         onDelete: deleteNode,
+        edges,
       },
       position,
     };
     nodeIdCounter.current += 1;
     setNodes((nds) => [...nds, newNode]);
-  }, [duplicateNode, deleteNode, setNodes]);
+  }, [duplicateNode, deleteNode, setNodes, edges]);
 
   const onDragOver = useCallback((event: React.DragEvent) => {
     event.preventDefault();
