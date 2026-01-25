@@ -23,6 +23,7 @@ import { PromptNode } from "./components/PromptNode";
 import { CropNode } from "./components/CropNode";
 import { LLMNode } from "./components/LLMNode";
 import { ExtractVideoFrameNode } from "./components/ExtractVideoFrameNode";
+import { VideoNode } from "./components/VideoNode";
 import { Sidebar } from "./components/Sidebar";
 import { HANDLE_COLORS_HEX } from "@/app/lib/constants";
 
@@ -33,6 +34,7 @@ const nodeTypes: NodeTypes = {
   cropNode: CropNode,
   llmNode: LLMNode,
   extractVideoFrameNode: ExtractVideoFrameNode,
+  videoNode: VideoNode,
 };
 
 const initialNodes: Node[] = [];
@@ -138,6 +140,7 @@ function FlowCanvas() {
       crop: { type: "cropNode", data: { label: "Crop" } },
       llm: { type: "llmNode", data: { label: "Any LLM" } },
       extract: { type: "extractVideoFrameNode", data: { label: "Extract Video Frame" } },
+      video: { type: "videoNode", data: { label: "Video" } },
     };
 
     const config = nodeConfig[type];

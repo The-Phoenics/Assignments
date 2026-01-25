@@ -15,6 +15,7 @@ export function Sidebar({ onNodeDragStart }: SidebarProps) {
 
   const nodeTypes = [
     { type: "file", label: "File", icon: "📁" },
+    { type: "video", label: "Video", icon: "🎥" },
     { type: "text", label: "Text", icon: "📝" },
     { type: "prompt", label: "Prompt", icon: "💬" },
     { type: "crop", label: "Crop", icon: "✂️" },

@@ -11,19 +11,18 @@ import Dashboard from '@uppy/react/dashboard';
 import '@uppy/core/css/style.css';
 import '@uppy/dashboard/css/style.css';
 
-interface UploadedFile {
+interface UploadedVideo {
   url: string;
-  type: 'image' | 'video';
   thumbnail?: string;
 }
 
-export function FileNode({ data, id }: { 
+export function VideoNode({ data, id }: { 
   data: { 
     label?: string; 
     onDuplicate: (id: string) => void; 
     onDelete: (id: string) => void; 
     edges?: Edge[]; 
-    imageUrl?: string;
+    videoUrl?: string;
     assemblyId?: string;
   }; 
   id: string 
@@ -37,28 +36,28 @@ export function FileNode({ data, id }: {
     );
   };
 
-  const imageOutputConnected = isHandleConnected('image-output', 'source');
+  const videoOutputConnected = isHandleConnected('video-output', 'source');
 
   const [uppy] = useState(() => {
     const uppyInstance = new Uppy({
       restrictions: {
         maxNumberOfFiles: 1,
-        allowedFileTypes: ['image/*'],
-        maxFileSize: 100 * 1024 * 1024, // 100MB
+        allowedFileTypes: ['video/*'],
+        maxFileSize: 500 * 1024 * 1024, // 500MB for videos
       },
       autoProceed: false,
     });
 
-    // Configure Transloadit
+    // Configure Transloadit for video processing
     uppyInstance.use(Transloadit, {
       waitForEncoding: true,
       waitForMetadata: true,
       assemblyOptions: async () => {
-        // Get signature from API for images
+        // Get signature from API for video
         const response = await fetch('/api/transloadit/signature', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ fileType: 'image' }),
+          body: JSON.stringify({ fileType: 'video' }),
         });
 
         if (!response.ok) {
@@ -77,8 +76,8 @@ export function FileNode({ data, id }: {
     return uppyInstance;
   });
 
-  const [uploadedFile, setUploadedFile] = useState<UploadedFile | null>(
-    data.imageUrl ? { url: data.imageUrl, type: 'image' } : null
+  const [uploadedVideo, setUploadedVideo] = useState<UploadedVideo | null>(
+    data.videoUrl ? { url: data.videoUrl } : null
   );
 
   const [isUploading, setIsUploading] = useState(false);
@@ -95,45 +94,33 @@ export function FileNode({ data, id }: {
 
     uppy.on('transloadit:complete', (assembly: any) => {
       setIsUploading(false);
-      console.log('Transloadit assembly complete:', assembly);
+      console.log('Transloadit video assembly complete:', assembly);
 
-      // Get the processed results
       const results = assembly?.results;
       
       if (!results) return;
 
-      // For images, get optimized version
-      if (results.optimized && results.optimized.length > 0) {
-        const file = results.optimized[0];
-        setUploadedFile({
-          url: file.ssl_url || file.url || '',
-          type: 'image',
-        });
-      }
-      // For videos, get encoded version and thumbnail
-      else if (results.encoded && results.encoded.length > 0) {
+      // Get encoded video and thumbnail
+      if (results.encoded && results.encoded.length > 0) {
         const video = results.encoded[0];
         const thumb = results.thumbnails?.[0];
-        setUploadedFile({
+        setUploadedVideo({
           url: video.ssl_url || video.url || '',
-          type: 'video',
           thumbnail: thumb?.ssl_url || thumb?.url || undefined,
         });
       }
       // Fallback to original
       else if (results[':original'] && results[':original'].length > 0) {
         const file = results[':original'][0];
-        const isVideo = file.mime?.startsWith('video/');
-        setUploadedFile({
+        setUploadedVideo({
           url: file.ssl_url || file.url || '',
-          type: isVideo ? 'video' : 'image',
         });
       }
     });
 
     uppy.on('error', (error) => {
       setIsUploading(false);
-      console.error('Upload error:', error);
+      console.error('Video upload error:', error);
     });
 
     return () => {
@@ -143,49 +130,41 @@ export function FileNode({ data, id }: {
   }, [uppy]);
 
   const handleRemove = () => {
-    setUploadedFile(null);
+    setUploadedVideo(null);
     uppy.cancelAll();
   };
 
   return (
     <div className="bg-[#222226] rounded-lg shadow-xl min-w-[220px] relative">
-      <NodeWrapper title="File" nodeId={id} onDuplicate={data.onDuplicate} onDelete={data.onDelete}>
+      <NodeWrapper title="Video" nodeId={id} onDuplicate={data.onDuplicate} onDelete={data.onDelete}>
         <div className="p-3">
-          {uploadedFile ? (
+          {uploadedVideo ? (
             <div className="relative">
-              {uploadedFile.type === 'image' ? (
-                <img 
-                  src={uploadedFile.url} 
-                  alt="Uploaded" 
-                  className="w-full h-32 object-cover rounded" 
-                />
-              ) : (
+              {uploadedVideo.thumbnail ? (
                 <div className="relative">
-                  {uploadedFile.thumbnail ? (
-                    <img 
-                      src={uploadedFile.thumbnail} 
-                      alt="Video thumbnail" 
-                      className="w-full h-32 object-cover rounded" 
-                    />
-                  ) : (
-                    <video 
-                      src={uploadedFile.url} 
-                      className="w-full h-32 object-cover rounded" 
-                      controls 
-                    />
-                  )}
-                  <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                    <div className="bg-black bg-opacity-50 rounded-full p-2">
+                  <img 
+                    src={uploadedVideo.thumbnail} 
+                    alt="Video thumbnail" 
+                    className="w-full h-32 object-cover rounded" 
+                  />
+                  <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-30 rounded">
+                    <div className="bg-blue-500 bg-opacity-90 rounded-full p-3">
                       <svg className="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 20 20">
                         <path d="M6.3 2.841A1.5 1.5 0 004 4.11V15.89a1.5 1.5 0 002.3 1.269l9.344-5.89a1.5 1.5 0 000-2.538L6.3 2.84z" />
                       </svg>
                     </div>
                   </div>
                 </div>
+              ) : (
+                <video 
+                  src={uploadedVideo.url} 
+                  className="w-full h-32 object-cover rounded" 
+                  controls 
+                />
               )}
               <button
                 onClick={handleRemove}
-                className="absolute top-1 right-1 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs hover:bg-red-600 transition-colors"
+                className="absolute top-1 right-1 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs hover:bg-red-600 transition-colors z-10"
               >
                 ×
               </button>
@@ -193,9 +172,10 @@ export function FileNode({ data, id }: {
           ) : (
             <div className="upload-area">
               {isUploading ? (
-                <div className="border-2 border-dashed border-gray-600 rounded bg-[#353539] h-32 flex flex-col items-center justify-center">
+                <div className="border-2 border-dashed border-blue-600 rounded bg-[#353539] h-32 flex flex-col items-center justify-center">
                   <div className="w-12 h-12 border-4 border-gray-600 border-t-blue-500 rounded-full animate-spin mb-2"></div>
-                  <span className="text-gray-400 text-xs">Uploading... {uploadProgress}%</span>
+                  <span className="text-gray-400 text-xs">Processing video... {uploadProgress}%</span>
+                  <span className="text-gray-500 text-xs mt-1">This may take a minute</span>
                 </div>
               ) : (
                 <Dashboard 
@@ -205,7 +185,7 @@ export function FileNode({ data, id }: {
                   proudlyDisplayPoweredByUppy={false}
                   hideProgressDetails={false}
                   hideUploadButton={false}
-                  note="Images only, up to 100 MB"
+                  note="Video files only, up to 500 MB"
                   theme="dark"
                 />
               )}
@@ -217,17 +197,17 @@ export function FileNode({ data, id }: {
         <Handle 
           type="source" 
           position={Position.Right}
-          id="image-output"
+          id="video-output"
           className={`w-5 h-5 border-2 rounded-full flex items-center justify-center p-1`}
-          style={{ position: 'relative', transform: 'none', top: 'auto', right: 'auto', left: 'auto', bottom: 'auto', borderColor: HANDLE_COLORS_HEX.image }}
+          style={{ position: 'relative', transform: 'none', top: 'auto', right: 'auto', left: 'auto', bottom: 'auto', borderColor: HANDLE_COLORS_HEX.video }}
         >
           <div className="rounded-full w-1 h-1 p-[2px]" style={{
-            backgroundColor: imageOutputConnected ? HANDLE_COLORS_HEX.image : 'transparent'
+            backgroundColor: videoOutputConnected ? HANDLE_COLORS_HEX.video : 'transparent'
           }} />
         </Handle>
       </div>
-      <div className="absolute -right-10 top-[40%] -translate-y-1/2 text-xs text-gray-400 whitespace-nowrap">
-        Image
+      <div className="absolute -right-12 top-[40%] -translate-y-1/2 text-xs text-gray-400 whitespace-nowrap">
+        Video
       </div>
     </div>
   );
