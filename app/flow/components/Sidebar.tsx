@@ -17,7 +17,6 @@ export function Sidebar({ onNodeDragStart }: SidebarProps) {
     { type: "file", label: "File", icon: "📁" },
     { type: "video", label: "Video", icon: "🎥" },
     { type: "text", label: "Text", icon: "📝" },
-    { type: "prompt", label: "Prompt", icon: "💬" },
     { type: "crop", label: "Crop", icon: "✂️" },
     { type: "llm", label: "Any LLM", icon: "🤖" },
     { type: "extract", label: "Extract Video Frame", icon: "🎬" },

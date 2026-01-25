@@ -6,7 +6,6 @@ export function NodePalette({ onNodeDragStart }: NodePaletteProps) {
   const nodeTypes = [
     { type: "file", label: "File", icon: "📁" },
     { type: "text", label: "Text", icon: "📝" },
-    { type: "prompt", label: "Prompt", icon: "💬" },
     { type: "crop", label: "Crop", icon: "✂️" },
     { type: "llm", label: "LLM", icon: "🤖" },
     { type: "extract", label: "Extract Frame", icon: "🎬" },

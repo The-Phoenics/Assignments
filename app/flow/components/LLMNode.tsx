@@ -12,7 +12,7 @@ export function LLMNode({ data, id }: { data: { label?: string; onDuplicate: (id
     );
   };
 
-  const promptInputConnected = isHandleConnected('prompt-input', 'target');
+  const textInputConnected = isHandleConnected('text-input', 'target');
   const imageInputConnected = isHandleConnected('image-input', 'target');
   const videoInputConnected = isHandleConnected('video-input', 'target');
   const textOutputConnected = isHandleConnected('text-output', 'source');
@@ -22,17 +22,17 @@ export function LLMNode({ data, id }: { data: { label?: string; onDuplicate: (id
         <Handle 
           type="target" 
           position={Position.Left}
-          id="prompt-input"
+          id="text-input"
           className={`w-5 h-5 border-2 rounded-full flex items-center justify-center p-1`}
-          style={{ position: 'relative', transform: 'none', top: 'auto', right: 'auto', left: 'auto', bottom: 'auto', borderColor: HANDLE_COLORS_HEX.prompt }}
+          style={{ position: 'relative', transform: 'none', top: 'auto', right: 'auto', left: 'auto', bottom: 'auto', borderColor: HANDLE_COLORS_HEX.text }}
         >
           <div className="rounded-full w-1 h-1 p-[2px]" style={{
-            backgroundColor: promptInputConnected ? HANDLE_COLORS_HEX.prompt : 'transparent'
+            backgroundColor: textInputConnected ? HANDLE_COLORS_HEX.text : 'transparent'
           }} />
         </Handle>
       </div>
-      <div className="absolute -left-16 top-[20%] -translate-y-1/2 text-xs text-gray-400 whitespace-nowrap">
-        Prompt
+      <div className="absolute -left-10 top-[20%] -translate-y-1/2 text-xs text-gray-400 whitespace-nowrap">
+        Text
       </div>
       <div className="absolute left-0 top-[40%] -translate-y-1/2 -translate-x-1/2 w-4 h-4 rounded-full bg-[#212125] flex items-center justify-center">
         <Handle

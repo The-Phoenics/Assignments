@@ -35,3 +35,4 @@ next-env.d.ts
 .trigger
 .pnpm-store
 .env
+/app/generated/prisma

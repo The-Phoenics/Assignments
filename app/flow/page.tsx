@@ -19,7 +19,6 @@ import {
 import "@xyflow/react/dist/style.css";
 import { FileNode } from "./components/FileNode";
 import { TextNode } from "./components/TextNode";
-import { PromptNode } from "./components/PromptNode";
 import { CropNode } from "./components/CropNode";
 import { LLMNode } from "./components/LLMNode";
 import { ExtractVideoFrameNode } from "./components/ExtractVideoFrameNode";
@@ -30,7 +29,6 @@ import { HANDLE_COLORS_HEX } from "@/app/lib/constants";
 const nodeTypes: NodeTypes = {
   fileNode: FileNode,
   textNode: TextNode,
-  promptNode: PromptNode,
   cropNode: CropNode,
   llmNode: LLMNode,
   extractVideoFrameNode: ExtractVideoFrameNode,
@@ -48,7 +46,7 @@ function FlowCanvas() {
   const reactFlowWrapper = useRef<HTMLDivElement>(null);
   const { screenToFlowPosition } = useReactFlow();
 
-  const isValidConnection = useCallback((connection: Connection) => {
+  const isValidConnection = useCallback((connection: Connection | Edge) => {
     // Extract handle types from handle IDs
     const sourceHandleId = connection.sourceHandle;
     const targetHandleId = connection.targetHandle;
@@ -136,7 +134,6 @@ function FlowCanvas() {
     const nodeConfig: Record<string, { type: string; data: { label: string } }> = {
       file: { type: "fileNode", data: { label: "File" } },
       text: { type: "textNode", data: { label: "Text" } },
-      prompt: { type: "promptNode", data: { label: "Prompt" } },
       crop: { type: "cropNode", data: { label: "Crop" } },
       llm: { type: "llmNode", data: { label: "Any LLM" } },
       extract: { type: "extractVideoFrameNode", data: { label: "Extract Video Frame" } },
