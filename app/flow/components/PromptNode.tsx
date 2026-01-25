@@ -20,7 +20,7 @@ export function PromptNode({ data, id }: { data: { label?: string; text?: string
         <textarea
           className="w-full bg-[#353539] text-[#FFFFFF] rounded px-3 py-2 text-sm resize-none focus:outline-none focus:ring-1 focus:ring-gray-600 overflow-hidden"
           placeholder="Enter your prompt here..."
-          defaultValue={data.text ?? "Hipster Sisyphus, lime dots overall suit, pushing a huge round rock up a hill. The rock is sprayed with the text 'default prompt', bright gray background extreme side long shot, cinematic, fashion style, side view"}
+          defaultValue={data.text ?? ""}
           rows={6}
           onInput={(e) => {
             e.currentTarget.style.height = 'auto';
