@@ -1,0 +1,163 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: #1a1a1a;
+  --foreground: #ededed;
+  --font-dm-sans: "DM Sans", system-ui, -apple-system, sans-serif;
+}
+
+body {
+  color: var(--foreground);
+  background: var(--background);
+  font-family: var(--font-dm-sans);
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
+
+/* React Flow custom styles */
+.react-flow__node {
+  cursor: pointer;
+}
+
+.react-flow__edge-path {
+  stroke-width: 2;
+}
+
+.react-flow__controls {
+  background: #2a2a2a;
+  border: 1px solid #404040;
+}
+
+.react-flow__controls-button {
+  background: #2a2a2a;
+  border-bottom: 1px solid #404040;
+  color: #9ca3af;
+}
+
+.react-flow__controls-button:hover {
+  background: #333333;
+  color: #e5e7eb;
+}
+
+.react-flow__minimap {
+  background: #2a2a2a;
+  border: 1px solid #404040;
+}
+
+.react-flow__attribution {
+  display: none;
+}
+
+/* Ensure proper z-index stacking */
+.react-flow__renderer {
+  z-index: 1;
+}
+
+.react-flow__node {
+  z-index: 2;
+}
+
+.react-flow__edge {
+  z-index: 1;
+}
+
+/* Ensure ReactFlow pane can receive drop events */
+.react-flow__pane {
+  z-index: 1;
+}
+
+.react-flow {
+  z-index: 1;
+}
+
+/* Uppy Dashboard Dark Theme Customization */
+.uppy-Dashboard {
+  --uppy-color-blue: #3b82f6;
+  --uppy-color-green: #22c55e;
+  --uppy-color-red: #ef4444;
+  font-family: var(--font-dm-sans);
+}
+
+.uppy-Dashboard-inner {
+  background-color: #353539 !important;
+  border: 2px dashed #4b5563 !important;
+  border-radius: 0.375rem !important;
+}
+
+.uppy-Dashboard-AddFiles {
+  border: none !important;
+}
+
+.uppy-Dashboard-AddFiles-title {
+  color: #9ca3af !important;
+  font-size: 0.875rem !important;
+}
+
+.uppy-Dashboard-note {
+  color: #6b7280 !important;
+  font-size: 0.75rem !important;
+}
+
+.uppy-Dashboard-browse {
+  color: #3b82f6 !important;
+}
+
+.uppy-DashboardContent-bar {
+  background-color: #2a2a2a !important;
+  border-bottom: 1px solid #404040 !important;
+}
+
+.uppy-DashboardContent-title {
+  color: #e5e7eb !important;
+}
+
+.uppy-Dashboard-Item {
+  background-color: #2a2a2a !important;
+  border-bottom: 1px solid #404040 !important;
+}
+
+.uppy-Dashboard-Item-name {
+  color: #e5e7eb !important;
+}
+
+.uppy-Dashboard-Item-status {
+  color: #9ca3af !important;
+}
+
+.uppy-StatusBar {
+  background-color: #2a2a2a !important;
+  border-top: 1px solid #404040 !important;
+}
+
+.uppy-StatusBar-content {
+  color: #9ca3af !important;
+}
+
+.uppy-StatusBar-actionBtn--upload {
+  background-color: #3b82f6 !important;
+  color: white !important;
+}
+
+.uppy-StatusBar-actionBtn--upload:hover {
+  background-color: #2563eb !important;
+}
+
+/* Drag and drop state */
+.uppy-Dashboard--isDraggingOver .uppy-Dashboard-inner {
+  border-color: #3b82f6 !important;
+  background-color: rgba(59, 130, 246, 0.05) !important;
+}
+
+.uppy-Dashboard-dropFilesHereHint {
+  color: #3b82f6 !important;
+  font-size: 1rem !important;
+}
